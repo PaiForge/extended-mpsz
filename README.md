@@ -26,16 +26,12 @@
 
 参照実装は [PaiForge/riichi-mahjong](https://github.com/PaiForge/riichi-mahjong)（TypeScript、npm の `@pai-forge/riichi-mahjong`）です。
 
-2026 年 10 月時点の riichi-mahjong は旧仕様（1.x）を実装しており、2.0 には未対応です。具体的には次の差分があります。
+| riichi-mahjong | 対応する仕様 |
+|---|---|
+| 0.12.0 以降 | 2.0（Draft） |
+| 0.11.x 以前 | 1.x |
 
-- 方向注釈 `-` `=` `+`、加槓 `{...}`、`^` を解釈できない。鳴き元はチー=上家、ポン・大明槓=対面を固定で設定する
-- `0` および字牌の範囲外の数字を黙って読み飛ばす（2.0 では拒否が必須）
-- `[1m2m3m]` のような複数サフィックスのブロックを受理する
-- 牌種 ID（`HaiKindId`）は 34 種のみで赤属性を持たないため、赤 5 の保持には牌 ID（`HaiId`）側の対応が必要
-- 面子の型（`Furo`）に鳴いた牌・加槓牌のフィールドがない
-- 正規形への変換は riichi-mahjong には無く、mahjong-scoring 側の直列化が独自に純手牌の整列を行っている
-
-この実装状況は riichi-mahjong 側の情報であり、2.0 対応が進んだ時点で riichi-mahjong の文書に移します。
+実装状況の詳細は riichi-mahjong 側の文書（README の「対応仕様」、CHANGELOG）を参照してください。
 
 ## 関連する記法
 
