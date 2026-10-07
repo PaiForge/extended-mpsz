@@ -1,10 +1,11 @@
-# Extended MSPZ の仕様
+# Extended MPSZ の仕様
 
-**Extended MSPZ（拡張MSPZ）** は、リーチ麻雀の手牌、すなわち純手牌と成立済みの面子を、単一の ASCII 文字列で表す表記法です。標準的な MSPZ 形式（`123m456p789s11z`）を基底とし、副露・加槓・暗槓を表す面子ブロックと、鳴き元・鳴いた牌・加槓牌を表す注釈を加えています。
+**Extended MPSZ（拡張MPSZ）** は、リーチ麻雀の手牌、すなわち純手牌と成立済みの面子を、単一の ASCII 文字列で表す表記法です。標準的な MPSZ 形式（`123m456p789s11z`）を基底とし、副露・加槓・暗槓を表す面子ブロックと、鳴き元・鳴いた牌・加槓牌を表す注釈を加えています。
 
 本書は記法の構文と意味を定めます。特定の言語やライブラリに依存しません。参照実装に関する記述は末尾の「参照実装」の節に限定します。
 
 - 仕様バージョン: 2.0
+- 旧称: Extended MSPZ（拡張MSPZ）。2026 年 10 月に Extended MPSZ へ改称しました。記法の内容は改称の前後で変わっていません。
 - 旧仕様（1.x: 注釈なし・加槓なし・赤ドラ未定義）との互換性は維持しません。変更点は末尾の「旧仕様からの変更点」を参照してください。
 
 ## 1. 用語
@@ -317,10 +318,10 @@ suit        = "m" | "p" | "s" | "z" ;
 
 | 関数 | 説明 |
 |---|---|
-| `parseMspz(input: string): Result<Tehai, MspzParseError>` | 標準 MSPZ（面子ブロックなし）を解析し、全牌を `closed` に格納した `Tehai` を返す |
-| `parseExtendedMspz(input: string): Result<Tehai, MspzParseError>` | 拡張 MSPZ を解析し、純手牌を `closed`、面子ブロックを `exposed` に格納した `Tehai` を返す |
-| `isMspz(input: string): input is MspzString` | 標準 MSPZ として書式が正しいかを判定する |
-| `isExtendedMspz(input: string): input is ExtendedMspzString` | `[` または `(` を含み、かつ拡張 MSPZ として書式が正しいかを判定する。括弧を含まない文字列は正しい MSPZ でも `false` |
+| `parseMspz(input: string): Result<Tehai, MspzParseError>` | 標準 MPSZ（面子ブロックなし）を解析し、全牌を `closed` に格納した `Tehai` を返す |
+| `parseExtendedMspz(input: string): Result<Tehai, MspzParseError>` | 拡張 MPSZ を解析し、純手牌を `closed`、面子ブロックを `exposed` に格納した `Tehai` を返す |
+| `isMspz(input: string): input is MspzString` | 標準 MPSZ として書式が正しいかを判定する |
+| `isExtendedMspz(input: string): input is ExtendedMspzString` | `[` または `(` を含み、かつ拡張 MPSZ として書式が正しいかを判定する。括弧を含まない文字列は正しい MPSZ でも `false` |
 
 ```typescript
 import { parseExtendedMspz } from "@pai-forge/riichi-mahjong";
