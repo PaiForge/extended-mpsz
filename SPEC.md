@@ -2,7 +2,7 @@
 
 **Extended MPSZ（拡張MPSZ）** は、リーチ麻雀の手牌、すなわち純手牌と成立済みの面子を、単一の ASCII 文字列で表す表記法です。標準的な MPSZ 形式（`123m456p789s11z`）を基底とし、副露・加槓・暗槓を表す面子ブロックと、鳴き元・鳴いた牌・加槓牌を表す注釈を加えています。
 
-本書は記法の構文と意味を定めます。特定の言語やライブラリに依存しません。参照実装に関する記述は末尾の「参照実装」の節に限定します。
+本書は記法の構文と意味を定めます。特定の言語やライブラリに依存しません。参照実装については README を参照してください。
 
 - 仕様バージョン: 2.0
 - 旧称: Extended MSPZ（拡張MSPZ）。2026 年 10 月に Extended MPSZ へ改称しました。記法の内容は改称の前後で変わっていません。
@@ -324,41 +324,3 @@ suit        = "m" | "p" | "s" | "z" ;
 - 文字集合が閉じていること（第 2 節）と、不正な文字列を全体として拒否すること（第 4.3 節）は拡張の前提です。実装は未知の文字を読み飛ばしてはなりません。
 - 第 8.2 節の項目のうち、1 人の手牌に閉じるもの（ツモ牌、伏せ牌、抜きドラなど）は拡張の候補です。河・他家の手牌・局面情報のように 1 人の手牌の構成を超えるものは、本記法の拡張ではなく、本記法を部品として用いる別の記法で扱います。
 - 拡張を導入するときは、第 9 節に正当な例と不正な例を追加します。
-
-## 参照実装
-
-参照実装は [PaiForge/riichi-mahjong](https://github.com/PaiForge/riichi-mahjong)（TypeScript）です。本節は実装の状況を記したもので、記法の仕様の一部ではありません。
-
-### 実装状況
-
-2026 年 10 月時点の riichi-mahjong は旧仕様（1.x）を実装しており、本書 2.0 には未対応です。具体的には次の差分があります。
-
-- 方向注釈 `-` `=` `+`、加槓 `{...}`、`^` を解釈できない。鳴き元はチー=上家、ポン・大明槓=対面を固定で設定する
-- `0` および字牌の範囲外の数字を黙って読み飛ばす（2.0 では拒否が必須）
-- `[1m2m3m]` のような複数サフィックスのブロックを受理する
-- 牌種 ID（`HaiKindId`）は 34 種のみで赤属性を持たないため、赤 5 の保持には牌 ID（`HaiId`）側の対応が必要
-- 面子の型（`Furo`）に鳴いた牌・加槓牌のフィールドがない
-- 正規形への変換は riichi-mahjong には無く、mahjong-scoring 側の直列化が独自に純手牌の整列を行っている
-
-### 公開 API
-
-解析関数（`parseMspz` `parseExtendedMspz`）は `neverthrow` の `Result` を返し、例外は投げません。判定関数（`isMspz` `isExtendedMspz`）は型ガードで、`boolean` を返します。
-
-| 関数 | 説明 |
-|---|---|
-| `parseMspz(input: string): Result<Tehai, MspzParseError>` | 標準 MPSZ（面子ブロックなし）を解析し、全牌を `closed` に格納した `Tehai` を返す |
-| `parseExtendedMspz(input: string): Result<Tehai, MspzParseError>` | 拡張 MPSZ を解析し、純手牌を `closed`、面子ブロックを `exposed` に格納した `Tehai` を返す |
-| `isMspz(input: string): input is MspzString` | 標準 MPSZ として書式が正しいかを判定する |
-| `isExtendedMspz(input: string): input is ExtendedMspzString` | `[` または `(` を含み、かつ拡張 MPSZ として書式が正しいかを判定する。括弧を含まない文字列は正しい MPSZ でも `false` |
-
-```typescript
-import { parseExtendedMspz } from "@pai-forge/riichi-mahjong";
-
-const result = parseExtendedMspz("123m[456p]"); // 1.x 表記
-if (result.isOk()) {
-  result.value.closed;  // [1m, 2m, 3m]
-  result.value.exposed; // [ { type: "Shuntsu", hais: [4p, 5p, 6p], furo: { type: "Chi", from: Kamicha } } ]
-}
-```
-
-暗槓は `exposed` に `furo` を持たない `Kantsu` として格納されます。
