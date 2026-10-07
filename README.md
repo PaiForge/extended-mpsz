@@ -35,28 +35,6 @@
 - 面子の型（`Furo`）に鳴いた牌・加槓牌のフィールドがない
 - 正規形への変換は riichi-mahjong には無く、mahjong-scoring 側の直列化が独自に純手牌の整列を行っている
 
-### 公開 API
-
-解析関数（`parseMspz` `parseExtendedMspz`）は `neverthrow` の `Result` を返し、例外は投げません。判定関数（`isMspz` `isExtendedMspz`）は型ガードで、`boolean` を返します。
-
-| 関数 | 説明 |
-|---|---|
-| `parseMspz(input: string): Result<Tehai, MspzParseError>` | 標準 MPSZ（面子ブロックなし）を解析し、全牌を `closed` に格納した `Tehai` を返す |
-| `parseExtendedMspz(input: string): Result<Tehai, MspzParseError>` | 拡張 MPSZ を解析し、純手牌を `closed`、面子ブロックを `exposed` に格納した `Tehai` を返す |
-| `isMspz(input: string): input is MspzString` | 標準 MPSZ として書式が正しいかを判定する |
-| `isExtendedMspz(input: string): input is ExtendedMspzString` | `[` または `(` を含み、かつ拡張 MPSZ として書式が正しいかを判定する。括弧を含まない文字列は正しい MPSZ でも `false` |
-
-```typescript
-import { parseExtendedMspz } from "@pai-forge/riichi-mahjong";
-
-const result = parseExtendedMspz("123m[456p]"); // 1.x 表記
-if (result.isOk()) {
-  result.value.closed;  // [1m, 2m, 3m]
-  result.value.exposed; // [ { type: "Shuntsu", hais: [4p, 5p, 6p], furo: { type: "Chi", from: Kamicha } } ]
-}
-```
-
-暗槓は `exposed` に `furo` を持たない `Kantsu` として格納されます。
 この実装状況は riichi-mahjong 側の情報であり、2.0 対応が進んだ時点で riichi-mahjong の文書に移します。
 
 ## 関連する記法
